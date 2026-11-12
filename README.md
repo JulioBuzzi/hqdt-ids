@@ -19,7 +19,23 @@ Os pontos são reduzidos a 3 componentes com PCA e codificados em 3 qubits com u
 | [`02_hqdt.ipynb`](notebooks/02_hqdt.ipynb) | Circuito ZZFeatureMap, fidelidade, treino da HQDT, árvore impressa, uso do cache |
 | [`03_comparacao.ipynb`](notebooks/03_comparacao.ipynb) | Reprodução da Tabela 1 com 5 sementes, precisão/recall/F1, ablações, KDDTest+, varredura de α e `reps` |
 
-## Resultados (reprodução)
+## Resultados reportados no artigo
+
+Acurácia no NSL-KDD (binário: normal × ataque), PCA com 3 componentes, 3 qubits, α = 0,5 (Tabela 1 do artigo):
+
+| Modelo | 1.000 | 5.000 | 10.000 | 25.000 |
+|---|---|---|---|---|
+| Árvore clássica (sem limite) | 89,4% | 91,2% | 92,1% | 93,5% |
+| Árvore clássica (depth=4) | 84,1% | 85,5% | 86,2% | 86,9% |
+| **HQDT (depth=4)** | **91,8%** | **93,2%** | **94,5%** | **95,1%** |
+
+![Acurácia reportada no artigo](results/acuracia_artigo.png)
+
+No artigo, a HQDT com profundidade 4 supera as duas baselines clássicas em todos os tamanhos de amostra.
+
+## Reprodução neste repositório
+
+O artigo não detalha o protocolo de treino/teste, o `reps` do feature map nem a implementação da baseline clássica. Os notebooks usam o protocolo abaixo, e com ele os números ficam diferentes dos do artigo. A investigação dessa diferença está em andamento.
 
 Protocolo: amostra estratificada de *n* instâncias do KDDTrain+, split 70/30 estratificado, pré-processamento ajustado só no treino, 5 sementes. Acurácia no teste (média ± desvio):
 
@@ -31,11 +47,11 @@ Protocolo: amostra estratificada de *n* instâncias do KDDTrain+, split 70/30 es
 | Ablação: só IG + percentis (α=1) | 92,1 ± 1,0 | 93,7 ± 0,9 | 93,5 ± 0,7 | 93,4 ± 0,5 |
 | Ablação: distância RBF clássica (α=0,5) | 90,5 ± 0,9 | 90,4 ± 1,1 | 90,5 ± 0,9 | 90,6 ± 0,3 |
 
-![Acurácia por tamanho](results/acuracia_por_tamanho.png)
+O gráfico da reprodução está no [notebook 03](notebooks/03_comparacao.ipynb) e em [`results/acuracia_por_tamanho.png`](results/acuracia_por_tamanho.png).
 
 O que a reprodução mostra:
 
-- **Os números não batem com a Tabela 1 do artigo.** No artigo, a árvore clássica com depth=4 fica em 86,9% e a HQDT em 95,1% (25.000 instâncias). Aqui a ordem se inverte: a árvore clássica fica em 94,8% e a HQDT em 90,8%. O artigo não informa o protocolo de treino/teste, o `reps` do feature map nem a implementação da baseline. Por isso a diferença ainda precisa ser investigada com o script original dos experimentos.
+- **Neste protocolo, a árvore clássica com depth=4 fica à frente da HQDT** (94,8% contra 90,8% com 25.000 instâncias), ao contrário da Tabela 1. A baseline clássica aqui fica bem acima da reportada no artigo (86,9%), o que indica uma diferença de setup ainda a esclarecer.
 - **A HQDT gera árvores menores.** Com 25.000 instâncias são ~8,8 folhas, contra ~14,8 da árvore clássica de mesma profundidade, o que confirma essa parte do artigo.
 - **α importa.** Com α=0,75 a HQDT chega a 93,6% e supera a versão só com IG (93,1%), mas ainda fica abaixo do scikit-learn.
 - **O cache de fidelidade não é usado.** As chaves (média da partição, centróide) nunca se repetem, então o cache teve 0 acertos.
