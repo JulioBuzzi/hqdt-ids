@@ -29,8 +29,6 @@ Acurácia no NSL-KDD (binário: normal × ataque), PCA com 3 componentes, 3 qubi
 | Árvore clássica (depth=4) | 84,1% | 85,5% | 86,2% | 86,9% |
 | **HQDT (depth=4)** | **91,8%** | **93,2%** | **94,5%** | **95,1%** |
 
-![Acurácia reportada no artigo](results/acuracia_artigo.png)
-
 No artigo, a HQDT com profundidade 4 supera as duas baselines clássicas em todos os tamanhos de amostra.
 
 ## Reprodução neste repositório
@@ -47,7 +45,7 @@ Protocolo: amostra estratificada de *n* instâncias do KDDTrain+, split 70/30 es
 | Ablação: só IG + percentis (α=1) | 92,1 ± 1,0 | 93,7 ± 0,9 | 93,5 ± 0,7 | 93,4 ± 0,5 |
 | Ablação: distância RBF clássica (α=0,5) | 90,5 ± 0,9 | 90,4 ± 1,1 | 90,5 ± 0,9 | 90,6 ± 0,3 |
 
-O gráfico da reprodução está no [notebook 03](notebooks/03_comparacao.ipynb) e em [`results/acuracia_por_tamanho.png`](results/acuracia_por_tamanho.png).
+![Acurácia por tamanho (reprodução)](results/acuracia_por_tamanho.png)
 
 O que a reprodução mostra:
 
